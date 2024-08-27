@@ -76,8 +76,8 @@ def enlarge_image(image: np.array, scale: np.array):
 
 
 def get_symbol_list():
-    symbol_group1 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    symbol_group2 = '0123456789'
+    symbol_group1 = 'abcdefghjkmnopqrtuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
+    symbol_group2 = '0123456789+'
     symbol_list = []
     for i in symbol_group1:
         for j in symbol_group2:
@@ -88,7 +88,7 @@ def get_symbol_list():
 def get_font_settings():
     # font = cv2.FONT_HERSHEY_SIMPLEX # alternative
     return {'font': cv2.FONT_HERSHEY_PLAIN,
-            'scale': 0.7,
+            'scale': 0.8,
             'thickness': 1,
             'lineType': 2}
 
@@ -271,7 +271,14 @@ def main(image_file_name, dimensions_inches, stitches_per_inch, colour_data, par
     print(matched_index_counts)
     print(len(matched_index_counts))
     # Display pixelated image with colours replaced with matched thread colours.
-    cv2.imshow("matched picture", matched_picture_reduced.astype(np.uint8))
+    matched_picture_enlarged = enlarge_image(matched_picture_reduced, np.array([5, 5]))
+    cv2.imshow("matched picture enlarged", matched_picture_enlarged.astype(np.uint8))
+
+
+
+    # TEXT BASED INTERFACE ################################################################################
+
+
 
     # Assign black / white text to overlay each thread colour
     black_white = np.array([[0, 0, 0], [255, 255, 255]])
@@ -305,15 +312,15 @@ def main(image_file_name, dimensions_inches, stitches_per_inch, colour_data, par
 if __name__ == "__main__":
     picture_file_name = "olliePlusAbbey.jpg"
     # picture_file_name = "example_picture_lowres.png"
-    inches = np.array([14, 12])
+    inches = np.array([12, 10])
     sizes = [16, 14, 12]
     num_stitches_per_inch = sizes[1]
 
-    all_colour_data = read_colour_data('colourData.txt')git
+    all_colour_data = read_colour_data('colourData.txt')
 
     a4_dims = np.array([3508, 2480, 3])
     main(picture_file_name, inches, num_stitches_per_inch, all_colour_data,
-         parameters={'cell dim': 15,
+         parameters={'cell dim': 20,
                      'cell margin': 1,
                      'max sheet size': np.array([2000, 1200, 3]),
                      'border': 100})
